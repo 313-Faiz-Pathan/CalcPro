@@ -1,0 +1,2215 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0a0f" id="metaThemeColor" />
+  <meta name="description" content="CalcPro — Premium Calculator with Scientific Mode, Currency Converter & PWA Support" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="CalcPro" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="application-name" content="CalcPro" />
+  <meta name="msapplication-TileColor" content="#6366f1" />
+
+  <link rel="manifest" href="data:application/json,{
+    %22name%22:%22CalcPro%20%E2%80%94%20Premium%20Calculator%22,
+    %22short_name%22:%22CalcPro%22,
+    %22description%22:%22Premium%20Calculator%22,
+    %22start_url%22:%22.%2F%22,
+    %22display%22:%22standalone%22,
+    %22background_color%22:%22%230a0a0f%22,
+    %22theme_color%22:%22%236366f1%22,
+    %22orientation%22:%22portrait-primary%22,
+    %22categories%22:[%22utilities%22]
+  }" />
+
+  <title>CalcPro — Premium Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       CSS CUSTOM PROPERTIES
+    ============================================================ */
+    :root {
+      --bg-primary:         #0a0a0f;
+      --bg-secondary:       #12121a;
+      --bg-card:            rgba(255,255,255,0.04);
+      --bg-card-hover:      rgba(255,255,255,0.07);
+      --bg-display:         rgba(0,0,0,0.35);
+      --bg-btn:             rgba(255,255,255,0.06);
+      --bg-btn-hover:       rgba(255,255,255,0.12);
+      --bg-btn-active:      rgba(255,255,255,0.18);
+      --bg-btn-operator:    rgba(99,102,241,0.18);
+      --bg-btn-op-hover:    rgba(99,102,241,0.30);
+      --bg-btn-equals:      linear-gradient(135deg,#6366f1,#8b5cf6);
+      --bg-btn-clear:       rgba(239,68,68,0.18);
+      --bg-btn-clear-hover: rgba(239,68,68,0.30);
+      --bg-btn-fn:          rgba(99,102,241,0.10);
+      --bg-btn-fn-hover:    rgba(99,102,241,0.22);
+
+      --accent:       #6366f1;
+      --accent-2:     #8b5cf6;
+      --accent-glow:  rgba(99,102,241,0.35);
+      --accent-red:   #ef4444;
+      --accent-green: #22c55e;
+      --accent-amber: #f59e0b;
+
+      --text-primary:   #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted:     #475569;
+      --text-accent:    #818cf8;
+
+      --border:        rgba(255,255,255,0.08);
+      --border-accent: rgba(99,102,241,0.40);
+
+      --shadow-sm:   0 2px 8px rgba(0,0,0,0.3);
+      --shadow-md:   0 8px 24px rgba(0,0,0,0.4);
+      --shadow-lg:   0 20px 60px rgba(0,0,0,0.6);
+      --shadow-glow: 0 0 30px rgba(99,102,241,0.25);
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+
+      --font-main: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --transition-fast: 150ms cubic-bezier(0.4,0,0.2,1);
+      --transition-med:  250ms cubic-bezier(0.4,0,0.2,1);
+      --transition-slow: 400ms cubic-bezier(0.4,0,0.2,1);
+
+      --safe-top:    env(safe-area-inset-top,    0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left:   env(safe-area-inset-left,   0px);
+      --safe-right:  env(safe-area-inset-right,  0px);
+    }
+
+    [data-theme="light"] {
+      --bg-primary:         #f0f2f8;
+      --bg-secondary:       #e4e8f0;
+      --bg-card:            rgba(255,255,255,0.75);
+      --bg-card-hover:      rgba(255,255,255,0.90);
+      --bg-display:         rgba(255,255,255,0.60);
+      --bg-btn:             rgba(255,255,255,0.70);
+      --bg-btn-hover:       rgba(255,255,255,0.90);
+      --bg-btn-active:      rgba(255,255,255,1);
+      --bg-btn-operator:    rgba(99,102,241,0.12);
+      --bg-btn-op-hover:    rgba(99,102,241,0.22);
+      --bg-btn-equals:      linear-gradient(135deg,#6366f1,#8b5cf6);
+      --bg-btn-clear:       rgba(239,68,68,0.12);
+      --bg-btn-clear-hover: rgba(239,68,68,0.22);
+      --bg-btn-fn:          rgba(99,102,241,0.08);
+      --bg-btn-fn-hover:    rgba(99,102,241,0.18);
+
+      --text-primary:   #1e293b;
+      --text-secondary: #475569;
+      --text-muted:     #94a3b8;
+      --text-accent:    #4f46e5;
+
+      --border:        rgba(0,0,0,0.08);
+      --border-accent: rgba(99,102,241,0.35);
+
+      --shadow-sm:   0 2px 8px rgba(0,0,0,0.08);
+      --shadow-md:   0 8px 24px rgba(0,0,0,0.12);
+      --shadow-lg:   0 20px 60px rgba(0,0,0,0.18);
+      --shadow-glow: 0 0 30px rgba(99,102,241,0.15);
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      font-size: 16px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      transition: background var(--transition-slow), color var(--transition-slow);
+      padding:
+        var(--safe-top) var(--safe-right)
+        var(--safe-bottom) var(--safe-left);
+    }
+
+    body::before, body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.12;
+      pointer-events: none;
+      z-index: 0;
+      transition: opacity var(--transition-slow);
+    }
+    body::before {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, #6366f1, transparent);
+      top: -150px; left: -150px;
+    }
+    body::after {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, #8b5cf6, transparent);
+      bottom: -100px; right: -100px;
+    }
+    [data-theme="light"] body::before,
+    [data-theme="light"] body::after { opacity: 0.06; }
+
+    /* ============================================================
+       APP WRAPPER
+    ============================================================ */
+    .app-wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 420px;
+      padding: 16px;
+    }
+
+    /* ============================================================
+       TOP BAR
+    ============================================================ */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding: 0 2px;
+    }
+
+    .app-logo { display: flex; align-items: center; gap: 8px; }
+    .app-logo .logo-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+    .app-logo .logo-text {
+      font-size: 15px; font-weight: 700; letter-spacing: -0.3px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .top-bar-actions { display: flex; gap: 8px; align-items: center; }
+
+    .icon-btn {
+      width: 36px; height: 36px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-size: 15px;
+      transition: all var(--transition-fast);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      touch-action: manipulation;
+    }
+    .icon-btn:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-primary);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+    .icon-btn:active { transform: scale(0.94); }
+    .icon-btn.active {
+      background: var(--bg-btn-operator);
+      border-color: var(--border-accent);
+      color: var(--text-accent);
+    }
+
+    /* ============================================================
+       MAIN CALCULATOR CARD
+    ============================================================ */
+    .calc-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,0.05);
+      overflow: hidden;
+      transition: box-shadow var(--transition-slow);
+      animation: fadeIn 0.5s ease both;
+    }
+    .calc-card:hover {
+      box-shadow: var(--shadow-lg), var(--shadow-glow), inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    /* ============================================================
+       MODE TABS
+    ============================================================ */
+    .mode-tabs {
+      display: flex;
+      padding: 10px 12px 0;
+      gap: 4px;
+      border-bottom: 1px solid var(--border);
+    }
+    .mode-tab {
+      flex: 1;
+      padding: 8px 6px;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      color: var(--text-muted);
+      font-family: var(--font-main);
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      position: relative;
+      touch-action: manipulation;
+    }
+    .mode-tab::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 50%; right: 50%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      border-radius: 2px 2px 0 0;
+      transition: all var(--transition-med);
+    }
+    .mode-tab.active { color: var(--text-accent); }
+    .mode-tab.active::after { left: 8px; right: 8px; }
+    .mode-tab:hover:not(.active) { color: var(--text-secondary); background: var(--bg-btn); }
+
+    /* ============================================================
+       TAB PANELS
+    ============================================================ */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ============================================================
+       DISPLAY AREA — KEY FIX AREA
+    ============================================================ */
+    .display-area {
+      background: var(--bg-display);
+      padding: 14px 18px 12px;
+      border-bottom: 1px solid var(--border);
+      min-height: 148px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+      overflow: hidden;
+    }
+    .display-area::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-accent), transparent);
+    }
+
+    /*
+     * THE FULL EXPRESSION DISPLAY
+     * ─────────────────────────────────────────────────────────────
+     * This scrollable container holds the ENTIRE accumulated
+     * expression (e.g. "7 + 2 + 3 + 4 +") so the user always
+     * sees the full chain. It scrolls horizontally when overflow.
+     * The inner span grows to fit any length without wrapping.
+     */
+    .full-expression-wrap {
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;           /* Firefox */
+      -ms-overflow-style: none;        /* IE/Edge */
+      margin-bottom: 5px;
+      min-height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .full-expression-wrap::-webkit-scrollbar { display: none; }
+
+    .full-expression-text {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      white-space: nowrap;             /* Never wrap — scroll instead */
+      letter-spacing: 0.4px;
+      text-align: right;
+      opacity: 0.9;
+      transition: color var(--transition-fast);
+      display: inline-block;
+    }
+    .full-expression-text:empty::after {
+      content: '\00a0'; /* non-breaking space placeholder */
+    }
+
+    /* Live intermediate result preview (shows below expression) */
+    .live-preview-line {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 400;
+      color: var(--accent);
+      text-align: right;
+      min-height: 16px;
+      margin-bottom: 3px;
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: 0.3px;
+    }
+    .live-preview-line.visible { opacity: 0.75; }
+
+    /* Main large number display */
+    .main-display {
+      font-family: var(--font-mono);
+      font-size: 40px;
+      font-weight: 300;
+      color: var(--text-primary);
+      text-align: right;
+      line-height: 1.1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      transition: font-size var(--transition-fast), color var(--transition-fast);
+      letter-spacing: -1px;
+    }
+    .main-display.small  { font-size: 28px; letter-spacing: -0.5px; }
+    .main-display.xsmall { font-size: 20px; letter-spacing: 0; }
+    .main-display.result-mode { color: var(--text-accent); }
+
+    .display-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+    }
+    .memory-indicator {
+      font-size: 10px; font-weight: 600; color: var(--accent);
+      letter-spacing: 1px; opacity: 0;
+      transition: opacity var(--transition-fast);
+    }
+    .memory-indicator.visible { opacity: 1; }
+    .mode-indicator {
+      font-size: 10px; font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+
+    /* Rate badge for converter */
+    .rate-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 9px; font-weight: 600;
+      padding: 2px 7px; border-radius: 10px;
+      background: rgba(99,102,241,0.12);
+      border: 1px solid rgba(99,102,241,0.25);
+      color: var(--text-accent);
+      letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    .rate-badge .dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--accent-green);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    .rate-badge.stale .dot { background: var(--accent-amber); animation: none; }
+    .rate-badge.error .dot { background: var(--accent-red);   animation: none; }
+    .rate-badge.loading .dot { background: var(--accent-amber); animation: pulse-dot 0.6s linear infinite; }
+
+    /* ============================================================
+       CALCULATOR KEYPAD
+    ============================================================ */
+    .keypad { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+    .btn-row { display: grid; gap: 8px; }
+    .btn-row-4 { grid-template-columns: repeat(4,1fr); }
+
+    /* ============================================================
+       SCIENTIFIC PANEL
+    ============================================================ */
+    .sci-functions-wrapper {
+      padding: 10px 12px 6px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(0,0,0,0.12);
+    }
+    .sci-grid-scroll {
+      overflow-y: auto;
+      overflow-x: hidden;
+      max-height: 196px;
+      padding-right: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-accent) transparent;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+    .sci-grid-scroll::-webkit-scrollbar { width: 4px; }
+    .sci-grid-scroll::-webkit-scrollbar-track { background: transparent; }
+    .sci-grid-scroll::-webkit-scrollbar-thumb { background: var(--border-accent); border-radius: 2px; }
+
+    .sci-functions-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 6px;
+    }
+
+    .angle-toggle {
+      display: flex; align-items: center;
+      background: var(--bg-btn); border: 1px solid var(--border);
+      border-radius: 20px; overflow: hidden; width: fit-content;
+    }
+    .angle-btn {
+      padding: 4px 12px; font-size: 10.5px; font-weight: 600;
+      font-family: var(--font-main); background: transparent; border: none;
+      color: var(--text-muted); cursor: pointer; letter-spacing: 0.5px;
+      text-transform: uppercase; transition: all var(--transition-fast);
+      touch-action: manipulation;
+    }
+    .angle-btn.active { background: var(--bg-btn-operator); color: var(--text-accent); }
+
+    /* ============================================================
+       CALCULATOR BUTTONS
+    ============================================================ */
+    .btn {
+      position: relative;
+      height: 56px;
+      background: var(--bg-btn);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-family: var(--font-main);
+      font-size: 16px; font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: flex; align-items: center; justify-content: center;
+      user-select: none; overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      touch-action: manipulation;
+    }
+    .btn::after {
+      content: '';
+      position: absolute; width: 100%; height: 100%;
+      background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+      opacity: 0; transition: opacity var(--transition-fast);
+      border-radius: inherit;
+    }
+    .btn:active::after { opacity: 1; }
+    .btn:hover {
+      background: var(--bg-btn-hover);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+    .btn:active { transform: scale(0.94) translateY(0); box-shadow: none; }
+
+    .btn-operator {
+      background: var(--bg-btn-operator);
+      border-color: rgba(99,102,241,0.15);
+      color: var(--text-accent); font-size: 20px;
+    }
+    .btn-operator:hover { background: var(--bg-btn-op-hover); }
+
+    .btn-equals {
+      background: var(--bg-btn-equals);
+      border: none; color: #ffffff;
+      font-size: 22px; font-weight: 600;
+      box-shadow: 0 4px 20px var(--accent-glow);
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+    .btn-equals:hover {
+      filter: brightness(1.12);
+      box-shadow: 0 6px 28px var(--accent-glow);
+      transform: translateY(-2px);
+    }
+    .btn-equals:active { transform: scale(0.94); filter: brightness(0.95); }
+
+    .btn-clear {
+      background: var(--bg-btn-clear);
+      border-color: rgba(239,68,68,0.15);
+      color: #ef4444; font-weight: 600;
+    }
+    .btn-clear:hover { background: var(--bg-btn-clear-hover); }
+
+    .btn-fn {
+      background: var(--bg-btn-fn);
+      border-color: rgba(99,102,241,0.10);
+      color: var(--text-secondary);
+      font-size: 12px; font-weight: 500;
+      font-family: var(--font-mono);
+    }
+    .btn-fn:hover { background: var(--bg-btn-fn-hover); color: var(--text-primary); }
+
+    .btn-sm  { height: 46px; font-size: 12px; }
+    .btn-mem { height: 44px; font-size: 11px; font-weight: 600; font-family: var(--font-mono); }
+
+    /* ============================================================
+       HISTORY PANEL
+    ============================================================ */
+    .history-panel {
+      border-top: 1px solid var(--border);
+      overflow: hidden; max-height: 0;
+      transition: max-height var(--transition-slow);
+    }
+    .history-panel.open { max-height: 240px; }
+
+    .history-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px 8px;
+    }
+    .history-title {
+      font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);
+    }
+    .history-clear-btn {
+      font-size: 10px; font-weight: 600; color: var(--accent-red);
+      background: none; border: none; cursor: pointer;
+      font-family: var(--font-main); padding: 2px 6px;
+      border-radius: 4px; transition: background var(--transition-fast);
+      touch-action: manipulation;
+    }
+    .history-clear-btn:hover { background: rgba(239,68,68,0.1); }
+
+    .history-list {
+      overflow-y: auto; max-height: 180px; padding: 0 12px 12px;
+      scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+      -webkit-overflow-scrolling: touch;
+    }
+    .history-list::-webkit-scrollbar { width: 4px; }
+    .history-list::-webkit-scrollbar-track { background: transparent; }
+    .history-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .history-item {
+      display: flex; flex-direction: column; align-items: flex-end;
+      padding: 8px 10px; border-radius: var(--radius-sm); cursor: pointer;
+      transition: background var(--transition-fast);
+      border-bottom: 1px solid var(--border);
+      touch-action: manipulation;
+    }
+    .history-item:last-child { border-bottom: none; }
+    .history-item:hover { background: var(--bg-btn); }
+    .history-item:active { background: var(--bg-btn-hover); }
+    .history-expr  { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-bottom: 2px; }
+    .history-result { font-family: var(--font-mono); font-size: 15px; font-weight: 500; color: var(--text-accent); }
+    .history-empty { text-align: center; color: var(--text-muted); font-size: 12px; padding: 16px; font-style: italic; }
+
+    /* ============================================================
+       MEMORY BAR
+    ============================================================ */
+    .memory-bar {
+      display: grid; grid-template-columns: repeat(5,1fr);
+      gap: 6px; padding: 10px 12px; border-bottom: 1px solid var(--border);
+    }
+
+    /* ============================================================
+       CONVERTER PANEL
+    ============================================================ */
+    .converter-panel { padding: 16px 14px; }
+
+    .converter-type-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+    .conv-type-btn {
+      padding: 5px 12px; background: var(--bg-btn); border: 1px solid var(--border);
+      border-radius: 20px; color: var(--text-secondary);
+      font-family: var(--font-main); font-size: 11.5px; font-weight: 600;
+      cursor: pointer; transition: all var(--transition-fast); touch-action: manipulation;
+    }
+    .conv-type-btn:hover { background: var(--bg-btn-hover); color: var(--text-primary); }
+    .conv-type-btn.active { background: var(--bg-btn-operator); border-color: var(--border-accent); color: var(--text-accent); }
+
+    .currency-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .currency-rate-info { display: flex; flex-direction: column; gap: 3px; }
+    .currency-rate-text { font-size: 10px; color: var(--text-muted); }
+    .refresh-btn {
+      display: flex; align-items: center; gap: 5px;
+      padding: 5px 10px; background: var(--bg-btn-fn);
+      border: 1px solid var(--border-accent); border-radius: 16px;
+      color: var(--text-accent); font-size: 11px; font-weight: 600;
+      font-family: var(--font-main); cursor: pointer;
+      transition: all var(--transition-fast); touch-action: manipulation;
+    }
+    .refresh-btn:hover { background: var(--bg-btn-fn-hover); }
+    .refresh-btn:active { transform: scale(0.95); }
+    .refresh-btn.spinning .refresh-icon { animation: spin 0.8s linear infinite; }
+    .refresh-icon { display: inline-block; font-size: 12px; }
+
+    .conv-row { display: flex; gap: 10px; align-items: stretch; margin-bottom: 10px; }
+    .conv-field { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+    .conv-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); }
+
+    .conv-select {
+      width: 100%; padding: 9px 28px 9px 12px;
+      background: var(--bg-btn); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: var(--text-primary);
+      font-family: var(--font-main); font-size: 13px; font-weight: 500;
+      cursor: pointer; outline: none; transition: all var(--transition-fast);
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2394a3b8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 10px center;
+    }
+    .conv-select:focus { border-color: var(--border-accent); box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
+
+    .conv-input {
+      width: 100%; padding: 9px 12px;
+      background: var(--bg-btn); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: var(--text-primary);
+      font-family: var(--font-mono); font-size: 15px; font-weight: 500;
+      outline: none; transition: all var(--transition-fast);
+    }
+    .conv-input:focus { border-color: var(--border-accent); box-shadow: 0 0 0 3px rgba(99,102,241,0.15); background: var(--bg-btn-hover); }
+    .conv-input::placeholder { color: var(--text-muted); }
+
+    .conv-swap-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; flex-shrink: 0; align-self: flex-end;
+      background: var(--bg-btn-operator); border: 1px solid var(--border-accent);
+      border-radius: 50%; color: var(--text-accent); font-size: 16px;
+      cursor: pointer; transition: all var(--transition-fast); touch-action: manipulation;
+    }
+    .conv-swap-btn:hover { background: var(--bg-btn-op-hover); transform: rotate(180deg); }
+    .conv-swap-btn:active { transform: scale(0.88) rotate(180deg); }
+
+    .conv-result-display {
+      background: var(--bg-display); border: 1px solid var(--border-accent);
+      border-radius: var(--radius-md); padding: 14px 16px; text-align: center; margin-top: 4px;
+    }
+    .conv-result-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 4px; }
+    .conv-result-value { font-family: var(--font-mono); font-size: 22px; font-weight: 400; color: var(--text-accent); letter-spacing: -0.5px; }
+    .conv-result-unit  { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+    .conv-disclaimer   { font-size: 10px; color: var(--text-muted); text-align: center; margin-top: 8px; font-style: italic; min-height: 14px; }
+
+    /* Loading overlay */
+    .converter-body-wrap { position: relative; }
+    .loading-overlay {
+      position: absolute; inset: 0; background: rgba(0,0,0,0.4);
+      display: none; align-items: center; justify-content: center;
+      border-radius: inherit; z-index: 10; backdrop-filter: blur(4px);
+    }
+    .loading-overlay.show { display: flex; }
+    .spinner {
+      width: 28px; height: 28px;
+      border: 3px solid var(--border); border-top-color: var(--accent);
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+    }
+
+    /* ============================================================
+       INSTALL BANNER
+    ============================================================ */
+    .install-banner {
+      display: none; align-items: center; gap: 10px;
+      background: var(--bg-btn-operator); border: 1px solid var(--border-accent);
+      border-radius: var(--radius-md); padding: 10px 14px;
+      margin-bottom: 12px; animation: fadeIn 0.4s ease both;
+    }
+    .install-banner.visible { display: flex; }
+    .install-banner-text { flex: 1; font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
+    .install-banner-text strong { color: var(--text-accent); display: block; font-size: 13px; }
+    .install-btn {
+      padding: 7px 14px; background: var(--bg-btn-equals); border: none;
+      border-radius: 20px; color: white; font-size: 12px; font-weight: 700;
+      font-family: var(--font-main); cursor: pointer;
+      transition: all var(--transition-fast); white-space: nowrap; touch-action: manipulation;
+    }
+    .install-btn:hover { filter: brightness(1.1); }
+    .install-dismiss {
+      background: none; border: none; color: var(--text-muted);
+      font-size: 16px; cursor: pointer; padding: 2px; touch-action: manipulation;
+    }
+    .install-dismiss:hover { color: var(--text-secondary); }
+
+    /* ============================================================
+       TOAST
+    ============================================================ */
+    .toast {
+      position: fixed;
+      bottom: calc(24px + var(--safe-bottom));
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 24px; padding: 10px 20px;
+      font-size: 13px; font-weight: 500; color: var(--text-primary);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      box-shadow: var(--shadow-md); z-index: 9999;
+      transition: transform var(--transition-med); white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ============================================================
+       SCROLLBAR GLOBAL
+    ============================================================ */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* ============================================================
+       KEYFRAME ANIMATIONS
+    ============================================================ */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: var(--shadow-lg), 0 0 20px var(--accent-glow); }
+      50%       { box-shadow: var(--shadow-lg), 0 0 40px var(--accent-glow); }
+    }
+    @keyframes digit-in {
+      from { transform: translateY(8px); opacity: 0.6; }
+      to   { transform: translateY(0);   opacity: 1; }
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%       { transform: translateX(-6px); }
+      40%       { transform: translateX(6px); }
+      60%       { transform: translateX(-4px); }
+      80%       { transform: translateX(4px); }
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.7); }
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .digit-animate { animation: digit-in 0.12s ease both; }
+    .shake         { animation: shake 0.35s ease; }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 380px) {
+      .app-wrapper { padding: 8px; }
+      .btn { height: 48px; font-size: 14px; }
+      .btn-sm { height: 42px; font-size: 11px; }
+      .main-display { font-size: 34px; }
+      .btn-mem { height: 38px; font-size: 10px; }
+      .sci-functions-grid { grid-template-columns: repeat(3,1fr); }
+      .display-area { min-height: 136px; }
+    }
+    @media (min-width: 481px) and (max-width: 768px) {
+      .app-wrapper { max-width: 440px; }
+      .btn { height: 58px; }
+      .sci-functions-grid { grid-template-columns: repeat(5,1fr); }
+    }
+    @media (min-width: 769px) {
+      .app-wrapper { max-width: 460px; }
+      .btn { height: 62px; }
+      .sci-functions-grid { grid-template-columns: repeat(6,1fr); }
+      .sci-grid-scroll { max-height: 160px; }
+    }
+    @media (min-width: 900px) {
+      .calc-card {
+        box-shadow:
+          var(--shadow-lg),
+          0 0 0 1px rgba(255,255,255,0.04),
+          inset 0 1px 0 rgba(255,255,255,0.07);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-wrapper">
+
+    <!-- PWA Install Banner -->
+    <div class="install-banner" id="installBanner">
+      <div class="install-banner-text">
+        <strong>📲 Install CalcPro</strong>
+        Add to home screen for a native app experience
+      </div>
+      <button class="install-btn" id="installBtn">Install</button>
+      <button class="install-dismiss" id="installDismiss" aria-label="Dismiss">✕</button>
+    </div>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="app-logo">
+        <div class="logo-icon">🧮</div>
+        <span class="logo-text">CalcPro</span>
+      </div>
+      <div class="top-bar-actions">
+        <button class="icon-btn" id="historyToggleBtn" title="History" aria-label="Toggle history">🕐</button>
+        <button class="icon-btn" id="themeToggleBtn"   title="Toggle theme" aria-label="Toggle theme">🌙</button>
+      </div>
+    </div>
+
+    <!-- Main Card -->
+    <div class="calc-card" id="calcCard">
+
+      <!-- Mode Tabs -->
+      <div class="mode-tabs" role="tablist">
+        <button class="mode-tab active" data-tab="standard"   role="tab" aria-selected="true">Standard</button>
+        <button class="mode-tab"        data-tab="scientific" role="tab" aria-selected="false">Scientific</button>
+        <button class="mode-tab"        data-tab="converter"  role="tab" aria-selected="false">Converter</button>
+      </div>
+
+      <!-- ═══════════ STANDARD TAB ═══════════ -->
+      <div class="tab-panel active" id="panel-standard">
+
+        <div class="display-area">
+          <!-- FULL accumulated expression (scrolls horizontally) -->
+          <div class="full-expression-wrap" id="exprWrap">
+            <span class="full-expression-text" id="exprText"></span>
+          </div>
+          <!-- Live result preview -->
+          <div class="live-preview-line" id="livePreview"></div>
+          <!-- Main number -->
+          <div class="main-display" id="mainDisplay">0</div>
+          <div class="display-meta">
+            <span class="memory-indicator" id="memIndicator">M</span>
+            <span class="mode-indicator">STD</span>
+          </div>
+        </div>
+
+        <!-- Memory bar -->
+        <div class="memory-bar">
+          <button class="btn btn-mem" data-action="mc"     title="Memory Clear">MC</button>
+          <button class="btn btn-mem" data-action="mr"     title="Memory Recall">MR</button>
+          <button class="btn btn-mem" data-action="ms"     title="Memory Store">MS</button>
+          <button class="btn btn-mem" data-action="mplus"  title="Memory Add">M+</button>
+          <button class="btn btn-mem" data-action="mminus" title="Memory Subtract">M−</button>
+        </div>
+
+        <!-- History panel -->
+        <div class="history-panel" id="historyPanel">
+          <div class="history-header">
+            <span class="history-title">History</span>
+            <button class="history-clear-btn" id="clearHistoryBtn">Clear all</button>
+          </div>
+          <div class="history-list" id="historyList">
+            <div class="history-empty">No history yet</div>
+          </div>
+        </div>
+
+        <!-- Keypad -->
+        <div class="keypad">
+          <div class="btn-row btn-row-4">
+            <button class="btn btn-clear"    data-action="clear">AC</button>
+            <button class="btn btn-fn"       data-action="backspace">⌫</button>
+            <button class="btn btn-fn"       data-action="percent">%</button>
+            <button class="btn btn-operator" data-action="operator" data-value="÷">÷</button>
+          </div>
+          <div class="btn-row btn-row-4">
+            <button class="btn" data-action="digit" data-value="7">7</button>
+            <button class="btn" data-action="digit" data-value="8">8</button>
+            <button class="btn" data-action="digit" data-value="9">9</button>
+            <button class="btn btn-operator" data-action="operator" data-value="×">×</button>
+          </div>
+          <div class="btn-row btn-row-4">
+            <button class="btn" data-action="digit" data-value="4">4</button>
+            <button class="btn" data-action="digit" data-value="5">5</button>
+            <button class="btn" data-action="digit" data-value="6">6</button>
+            <button class="btn btn-operator" data-action="operator" data-value="−">−</button>
+          </div>
+          <div class="btn-row btn-row-4">
+            <button class="btn" data-action="digit" data-value="1">1</button>
+            <button class="btn" data-action="digit" data-value="2">2</button>
+            <button class="btn" data-action="digit" data-value="3">3</button>
+            <button class="btn btn-operator" data-action="operator" data-value="+">+</button>
+          </div>
+          <div class="btn-row btn-row-4">
+            <button class="btn btn-fn" data-action="toggle-sign">+/−</button>
+            <button class="btn"        data-action="digit" data-value="0">0</button>
+            <button class="btn btn-fn" data-action="decimal">.</button>
+            <button class="btn btn-equals" data-action="equals">=</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SCIENTIFIC TAB ═══════════ -->
+      <div class="tab-panel" id="panel-scientific">
+
+        <div class="display-area">
+          <div class="full-expression-wrap" id="sciExprWrap">
+            <span class="full-expression-text" id="sciExprText"></span>
+          </div>
+          <div class="live-preview-line" id="sciLivePreview"></div>
+          <div class="main-display" id="sciMainDisplay">0</div>
+          <div class="display-meta">
+            <span class="memory-indicator" id="sciMemIndicator">M</span>
+            <span class="mode-indicator">SCI</span>
+          </div>
+        </div>
+
+        <!-- Memory bar -->
+        <div class="memory-bar">
+          <button class="btn btn-mem" data-action="mc"     title="Memory Clear">MC</button>
+          <button class="btn btn-mem" data-action="mr"     title="Memory Recall">MR</button>
+          <button class="btn btn-mem" data-action="ms"     title="Memory Store">MS</button>
+          <button class="btn btn-mem" data-action="mplus"  title="Memory Add">M+</button>
+          <button class="btn btn-mem" data-action="mminus" title="Memory Subtract">M−</button>
+        </div>
+
+        <!-- Scientific functions -->
+        <div class="sci-functions-wrapper">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div class="angle-toggle">
+              <button class="angle-btn active" data-angle="rad" id="angleRad">RAD</button>
+              <button class="angle-btn"        data-angle="deg" id="angleDeg">DEG</button>
+            </div>
+            <span style="font-size:10px;color:var(--text-muted);letter-spacing:0.5px;">↕ Scroll for more</span>
+          </div>
+          <div class="sci-grid-scroll" id="sciGridScroll">
+            <div class="sci-functions-grid">
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="sin">sin</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="cos">cos</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="tan">tan</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="cot">cot</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="asin">sin⁻¹</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="acos">cos⁻¹</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="atan">tan⁻¹</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="acot">cot⁻¹</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="sinh">sinh</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="cosh">cosh</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="tanh">tanh</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="asinh">sinh⁻¹</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="log">log₁₀</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="ln">ln</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="log2">log₂</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="exp">eˣ</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="sqrt">√x</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="cbrt">∛x</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="square">x²</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="cube">x³</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="pow">xʸ</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="reciprocal">1/x</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="factorial">n!</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="abs">|x|</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="pi">π</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="e_const">e</button>
+              <button class="btn btn-fn btn-sm" data-action="sci" data-value="phi">φ</button>
+              <button class="btn btn-fn btn-sm" data-action="bracket" data-value="(">( )</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Numpad -->
+        <div class="keypad">
+          <div class="btn-row btn-row-4">
+            <button class="btn btn-clear"    data-action="clear">AC</button>
+            <button class="btn btn-fn"       data-action="backspace">⌫</button>
+            <button class="btn btn-fn"       data-action="percent">%</button>
+            <button class="btn btn-operator" data-action="operator" data-value="÷">÷</button>
+          </div>
+          <div class="btn-row btn-row-4">
+            <button class="btn" data-action="digit" data-value="7">7</button>
+            <button class="btn" data-action="digit" data-value="8">8</button>
+            <button class="btn" data-action="digit" data-value="9">9</button>
+            <button class="btn btn-operator" data-action="operator" data-value="×">×</button>
+          </div>
+          <div class="btn-row btn-row-4">
+            <button class="btn" data-action="digit" data-value="4">4</button>
+            <button class="btn" data-action="digit" data-value="5">5</button>
+            <button class="btn" data-action="digit" data-value="6">6</button>
+            <button class="btn btn-operator" data-action="operator" data-value="−">−</button>
+          </div>
+          <div class="btn-row btn-row-4">
+            <button class="btn" data-action="digit" data-value="1">1</button>
+            <button class="btn" data-action="digit" data-value="2">2</button>
+            <button class="btn" data-action="digit" data-value="3">3</button>
+            <button class="btn btn-operator" data-action="operator" data-value="+">+</button>
+          </div>
+          <div class="btn-row btn-row-4">
+            <button class="btn btn-fn" data-action="toggle-sign">+/−</button>
+            <button class="btn"        data-action="digit" data-value="0">0</button>
+            <button class="btn btn-fn" data-action="decimal">.</button>
+            <button class="btn btn-equals" data-action="equals">=</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ CONVERTER TAB ═══════════ -->
+      <div class="tab-panel" id="panel-converter">
+        <div class="converter-panel">
+
+          <div class="converter-type-tabs" id="convTypeTabs">
+            <button class="conv-type-btn active" data-conv="currency">💱 Currency</button>
+            <button class="conv-type-btn" data-conv="length">📏 Length</button>
+            <button class="conv-type-btn" data-conv="weight">⚖️ Weight</button>
+            <button class="conv-type-btn" data-conv="temperature">🌡️ Temp</button>
+            <button class="conv-type-btn" data-conv="area">📐 Area</button>
+            <button class="conv-type-btn" data-conv="volume">🧪 Volume</button>
+            <button class="conv-type-btn" data-conv="data">💾 Data</button>
+          </div>
+
+          <div class="currency-header" id="currencyHeader" style="display:none;">
+            <div class="currency-rate-info">
+              <span class="rate-badge loading" id="rateBadge">
+                <span class="dot"></span>
+                <span id="rateStatus">Loading...</span>
+              </span>
+              <span class="currency-rate-text" id="rateTimestamp"></span>
+            </div>
+            <button class="refresh-btn" id="refreshRatesBtn">
+              <span class="refresh-icon" id="refreshIcon">↻</span>
+              Refresh Rates
+            </button>
+          </div>
+
+          <div class="converter-body-wrap">
+            <div class="loading-overlay" id="convLoading">
+              <div class="spinner"></div>
+            </div>
+            <div class="converter-body" id="converterBody">
+              <div class="conv-row">
+                <div class="conv-field">
+                  <label class="conv-label">From</label>
+                  <select class="conv-select" id="convFromUnit"></select>
+                </div>
+                <button class="conv-swap-btn" id="convSwapBtn" title="Swap units">⇄</button>
+                <div class="conv-field">
+                  <label class="conv-label">To</label>
+                  <select class="conv-select" id="convToUnit"></select>
+                </div>
+              </div>
+              <div class="conv-row">
+                <div class="conv-field">
+                  <label class="conv-label">Input Value</label>
+                  <input type="number" class="conv-input" id="convInput" placeholder="Enter value…" inputmode="decimal" />
+                </div>
+              </div>
+              <div class="conv-result-display">
+                <div class="conv-result-label">Result</div>
+                <div class="conv-result-value" id="convResultValue">—</div>
+                <div class="conv-result-unit"  id="convResultUnit"></div>
+              </div>
+              <div class="conv-disclaimer" id="convDisclaimer"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end calc-card -->
+  </div><!-- end app-wrapper -->
+
+  <!-- Toast -->
+  <div class="toast" id="toastMsg" role="status" aria-live="polite"></div>
+
+  <!-- ============================================================
+       SERVICE WORKER (inline blob)
+  ============================================================ -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      const sw = `
+        const CACHE='calcpro-v2';
+        self.addEventListener('install',e=>{
+          e.waitUntil(caches.open(CACHE).then(c=>c.addAll([self.location.href])));
+          self.skipWaiting();
+        });
+        self.addEventListener('activate',e=>{
+          e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));
+          self.clients.claim();
+        });
+        self.addEventListener('fetch',e=>{
+          if(e.request.url.includes('exchangerate')||e.request.url.includes('er-api'))return;
+          e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)));
+        });
+      `;
+      const blob = new Blob([sw], {type:'application/javascript'});
+      navigator.serviceWorker.register(URL.createObjectURL(blob))
+        .catch(()=>{});
+    }
+  </script>
+
+  <!-- ============================================================
+       MAIN APPLICATION JAVASCRIPT
+  ============================================================ -->
+  <script>
+  (() => {
+    'use strict';
+
+    /* ══════════════════════════════════════════════════════════════
+       STATE
+       ─────────────────────────────────────────────────────────────
+       The key addition is `expressionTokens`: an ordered array of
+       tokens that represent the FULL ongoing expression so far.
+       e.g. after pressing 7, +, 2, +, 3, + the tokens are:
+            [ '7', '+', '2', '+', '3', '+' ]
+       After pressing 4 and before hitting =:
+            [ '7', '+', '2', '+', '3', '+', '4' ]
+       This allows us to always render the entire chain.
+    ══════════════════════════════════════════════════════════════ */
+    const state = {
+      // ── calculator core ──
+      currentValue:      '0',      // what's shown in the big display
+      pendingValue:      null,      // left-hand operand of current operation
+      pendingOperator:   null,      // pending operator ('+','−','×','÷','^')
+      shouldResetNext:   false,     // next digit press replaces currentValue
+      justEvaluated:     false,     // true immediately after '=' pressed
+      memoryValue:       0,
+
+      // ── FULL EXPRESSION CHAIN (THE FIX) ──────────────────────
+      // Each element is either a number-string or an operator-string.
+      // We append to this every time the user presses a digit group
+      // or an operator, and clear on AC / after '='.
+      expressionTokens:  [],        // e.g. ['7','+','2','+','3','+']
+
+      // ── misc ──
+      history:           [],
+      theme:             'dark',
+      currentTab:        'standard',
+      isPendingPow:      false,
+      bracketOpen:       false,
+      angleMode:         'rad',
+
+      // ── converter / currency ──
+      currentConvType:   'currency',
+      currencyRates:     null,
+      currencyLastFetch: null,
+      currencyLoading:   false,
+    };
+
+    /* ══════════════════════════════════════════════════════════════
+       DOM HELPERS
+    ══════════════════════════════════════════════════════════════ */
+    const $ = id => document.getElementById(id);
+
+    const dom = {
+      // standard display
+      mainDisplay:     $('mainDisplay'),
+      exprWrap:        $('exprWrap'),
+      exprText:        $('exprText'),
+      livePreview:     $('livePreview'),
+      memIndicator:    $('memIndicator'),
+      // sci display
+      sciMainDisplay:  $('sciMainDisplay'),
+      sciExprWrap:     $('sciExprWrap'),
+      sciExprText:     $('sciExprText'),
+      sciLivePreview:  $('sciLivePreview'),
+      sciMemIndicator: $('sciMemIndicator'),
+      sciGridScroll:   $('sciGridScroll'),
+      // ui
+      historyPanel:    $('historyPanel'),
+      historyList:     $('historyList'),
+      historyToggleBtn:$('historyToggleBtn'),
+      clearHistoryBtn: $('clearHistoryBtn'),
+      themeToggleBtn:  $('themeToggleBtn'),
+      modeTabs:        document.querySelectorAll('.mode-tab'),
+      tabPanels:       document.querySelectorAll('.tab-panel'),
+      // converter
+      convTypeTabs:    $('convTypeTabs'),
+      convFromUnit:    $('convFromUnit'),
+      convToUnit:      $('convToUnit'),
+      convInput:       $('convInput'),
+      convResultValue: $('convResultValue'),
+      convResultUnit:  $('convResultUnit'),
+      convSwapBtn:     $('convSwapBtn'),
+      convDisclaimer:  $('convDisclaimer'),
+      convLoading:     $('convLoading'),
+      currencyHeader:  $('currencyHeader'),
+      rateBadge:       $('rateBadge'),
+      rateStatus:      $('rateStatus'),
+      rateTimestamp:   $('rateTimestamp'),
+      refreshRatesBtn: $('refreshRatesBtn'),
+      // pwa
+      installBanner:   $('installBanner'),
+      installBtn:      $('installBtn'),
+      installDismiss:  $('installDismiss'),
+      metaThemeColor:  $('metaThemeColor'),
+    };
+
+    /* ══════════════════════════════════════════════════════════════
+       FORMAT RESULT
+    ══════════════════════════════════════════════════════════════ */
+    function fmt(num) {
+      if (isNaN(num))     return 'Error';
+      if (!isFinite(num)) return num > 0 ? 'Infinity' : '-Infinity';
+      // 12 significant digits, strip floating-point noise
+      return String(parseFloat(num.toPrecision(12)));
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       CORE ARITHMETIC
+    ══════════════════════════════════════════════════════════════ */
+    function compute(a, op, b) {
+      switch (op) {
+        case '+': return a + b;
+        case '−': return a - b;
+        case '×': return a * b;
+        case '÷': return b === 0 ? (a === 0 ? NaN : Infinity * Math.sign(a)) : a / b;
+        case '^': return Math.pow(a, b);
+        default:  return b;
+      }
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       BUILD THE FULL EXPRESSION STRING FROM TOKENS
+       ─────────────────────────────────────────────────────────────
+       Joins tokens with spaces. While the user is mid-entry
+       (shouldResetNext = false and pendingOperator exists),
+       we also append the currentValue if it isn't already the
+       last token (operator was just pressed).
+    ══════════════════════════════════════════════════════════════ */
+    function buildExpressionString() {
+      if (state.expressionTokens.length === 0) return '';
+      return state.expressionTokens.join(' ');
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       UPDATE ALL DISPLAYS
+    ══════════════════════════════════════════════════════════════ */
+    function updateDisplays() {
+      const val = state.currentValue;
+
+      /* — main number size scaling — */
+      let sizeClass = '';
+      if (val.length > 14) sizeClass = 'xsmall';
+      else if (val.length > 10) sizeClass = 'small';
+
+      const resultMode = state.justEvaluated;
+
+      [dom.mainDisplay, dom.sciMainDisplay].forEach(el => {
+        if (!el) return;
+        el.textContent = val;
+        el.className = 'main-display ' + sizeClass + (resultMode ? ' result-mode' : '');
+      });
+
+      /* — memory indicator — */
+      const memOn = state.memoryValue !== 0;
+      [dom.memIndicator, dom.sciMemIndicator].forEach(el => {
+        if (el) el.classList.toggle('visible', memOn);
+      });
+
+      /* — full expression string — */
+      updateExpressionDisplay();
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       UPDATE EXPRESSION DISPLAY  ← THE CORE FIX
+       ─────────────────────────────────────────────────────────────
+       Renders the full token chain into the top display bar and
+       scrolls it to the rightmost end so the latest entry is
+       always visible. Also shows a live "= preview" below it.
+    ══════════════════════════════════════════════════════════════ */
+    function updateExpressionDisplay() {
+      const exprStr = buildExpressionString();
+
+      /* Render text & auto-scroll right */
+      [
+        { text: dom.exprText,    wrap: dom.exprWrap    },
+        { text: dom.sciExprText, wrap: dom.sciExprWrap },
+      ].forEach(({ text, wrap }) => {
+        if (!text || !wrap) return;
+        text.textContent = exprStr;
+        // Defer scroll so browser has painted the new width first
+        requestAnimationFrame(() => {
+          wrap.scrollLeft = wrap.scrollWidth;
+        });
+      });
+
+      /* Live preview: show running total while building an expression */
+      updateLivePreview();
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       LIVE PREVIEW
+       ─────────────────────────────────────────────────────────────
+       When the user has typed something like "7 + 2 + 3 +" and is
+       entering the next number, show a faint "= 12" below the
+       expression so they can track the running total.
+    ══════════════════════════════════════════════════════════════ */
+    function updateLivePreview() {
+      // Only show preview when:
+      //   • there's a pending operator
+      //   • we have a pendingValue
+      //   • the user is actively entering the second operand
+      //     (shouldResetNext = false means they have typed at least one digit)
+      const canPreview =
+        state.pendingOperator &&
+        state.pendingValue !== null &&
+        !state.shouldResetNext &&
+        !state.justEvaluated;
+
+      let previewText = '';
+      if (canPreview) {
+        const interim = compute(
+          parseFloat(state.pendingValue),
+          state.pendingOperator,
+          parseFloat(state.currentValue)
+        );
+        if (isFinite(interim) && !isNaN(interim)) {
+          previewText = '= ' + fmt(interim);
+        }
+      }
+
+      [dom.livePreview, dom.sciLivePreview].forEach(el => {
+        if (!el) return;
+        el.textContent = previewText;
+        el.classList.toggle('visible', previewText !== '');
+      });
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       DIGIT INPUT
+    ══════════════════════════════════════════════════════════════ */
+    function handleDigit(digit) {
+      if (state.justEvaluated) {
+        /*
+         * After '=' the user starts a brand new expression.
+         * Clear all tokens and begin fresh.
+         */
+        state.expressionTokens = [];
+        state.justEvaluated    = false;
+        state.currentValue     = digit === '0' ? '0' : digit;
+      } else if (state.shouldResetNext) {
+        /*
+         * Operator was just pressed — start collecting the
+         * next operand. Don't touch expressionTokens here;
+         * the operator already appended its token.
+         */
+        state.currentValue    = digit === '0' ? '0' : digit;
+        state.shouldResetNext = false;
+      } else {
+        /* Normal: append digit to current value */
+        if (state.currentValue === '0' && digit !== '.') {
+          state.currentValue = digit;
+        } else {
+          if (state.currentValue.replace(/[^0-9]/g, '').length >= 15) return;
+          state.currentValue += digit;
+        }
+      }
+
+      /*
+       * Always keep the LAST token in sync with currentValue.
+       * If the last token is an operator, push a new number token.
+       * Otherwise replace the last token (we're building the number).
+       */
+      syncCurrentValueToken();
+
+      /* Digit-drop animation on main display */
+      dom.mainDisplay.classList.add('digit-animate');
+      setTimeout(() => dom.mainDisplay.classList.remove('digit-animate'), 120);
+
+      updateDisplays();
+    }
+
+    /*
+     * syncCurrentValueToken()
+     * ────────────────────────
+     * Ensures expressionTokens always ends with the current number
+     * being typed. If the last token is an operator we push a new
+     * number token; otherwise we replace the last token.
+     */
+    function syncCurrentValueToken() {
+      const tokens = state.expressionTokens;
+      const isOperatorToken = t => ['+','−','×','÷','^'].includes(t);
+
+      if (tokens.length === 0) {
+        // First token ever
+        tokens.push(state.currentValue);
+      } else {
+        const last = tokens[tokens.length - 1];
+        if (isOperatorToken(last)) {
+          // Operator was the last thing — add the new number
+          tokens.push(state.currentValue);
+        } else {
+          // Replace the number that's being typed
+          tokens[tokens.length - 1] = state.currentValue;
+        }
+      }
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       DECIMAL
+    ══════════════════════════════════════════════════════════════ */
+    function handleDecimal() {
+      if (state.justEvaluated) {
+        state.expressionTokens = [];
+        state.justEvaluated    = false;
+        state.currentValue     = '0.';
+        state.shouldResetNext  = false;
+      } else if (state.shouldResetNext) {
+        state.currentValue    = '0.';
+        state.shouldResetNext = false;
+      } else if (!state.currentValue.includes('.')) {
+        state.currentValue += '.';
+      }
+      syncCurrentValueToken();
+      updateDisplays();
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       OPERATOR  ← KEY PART OF THE FIX
+       ─────────────────────────────────────────────────────────────
+       Instead of REPLACING the expression string, we APPEND the
+       operator token to expressionTokens. This is what lets
+       "7 + 2 + 3 + 4" accumulate properly.
+    ══════════════════════════════════════════════════════════════ */
+    function handleOperator(op) {
+      // If the user types two operators in a row, just update the last one
+      const tokens = state.expressionTokens;
+      const isOp   = t => ['+','−','×','÷','^'].includes(t);
+
+      if (tokens.length > 0 && isOp(tokens[tokens.length - 1])) {
+        // Replace the dangling operator
+        tokens[tokens.length - 1] = op;
+        state.pendingOperator = op;
+        updateDisplays();
+        return;
+      }
+
+      // If there is already a pending operation, evaluate it first
+      if (state.pendingOperator !== null && !state.shouldResetNext) {
+        const result = compute(
+          parseFloat(state.pendingValue),
+          state.pendingOperator,
+          parseFloat(state.currentValue)
+        );
+        const rs = fmt(result);
+        state.currentValue = rs;
+        state.pendingValue = rs;
+        // Update the last number token with the intermediate result
+        if (tokens.length > 0 && !isOp(tokens[tokens.length - 1])) {
+          tokens[tokens.length - 1] = rs;
+        }
+      } else {
+        state.pendingValue = state.currentValue;
+      }
+
+      // Append the operator token
+      tokens.push(op);
+
+      state.pendingOperator = op;
+      state.shouldResetNext = true;
+      state.justEvaluated   = false;
+
+      updateDisplays();
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       EQUALS
+    ══════════════════════════════════════════════════════════════ */
+    function handleEquals() {
+      /* Special case: xʸ pending */
+      if (state.isPendingPow) {
+        const result = Math.pow(
+          parseFloat(state.pendingValue),
+          parseFloat(state.currentValue)
+        );
+        const rs = fmt(result);
+        // Build the full expression label for history
+        const fullExpr = buildExpressionString() + ' =';
+        addToHistory(fullExpr, rs);
+
+        state.expressionTokens = [rs]; // reset; result becomes the seed
+        state.currentValue     = rs;
+        state.pendingValue     = null;
+        state.pendingOperator  = null;
+        state.shouldResetNext  = true;
+        state.justEvaluated    = true;
+        state.isPendingPow     = false;
+
+        if (!isFinite(result) || isNaN(result)) shakeDisplay();
+        updateDisplays();
+        return;
+      }
+
+      if (state.pendingOperator === null || state.pendingValue === null) {
+        // Nothing to evaluate — just show current value
+        state.justEvaluated = true;
+        updateDisplays();
+        return;
+      }
+
+      const result = compute(
+        parseFloat(state.pendingValue),
+        state.pendingOperator,
+        parseFloat(state.currentValue)
+      );
+      const rs = fmt(result);
+
+      /*
+       * Build the complete human-readable expression for history.
+       * Make sure the last token (current number) is up to date.
+       */
+      const tokens = state.expressionTokens;
+      const isOp   = t => ['+','−','×','÷','^'].includes(t);
+      if (tokens.length > 0 && !isOp(tokens[tokens.length - 1])) {
+        tokens[tokens.length - 1] = state.currentValue;
+      }
+      const fullExpr = tokens.join(' ') + ' =';
+      addToHistory(fullExpr, rs);
+
+      /*
+       * After '=', clear the token chain. The result becomes
+       * available as the seed value if the user presses another
+       * operator (standard calculator behaviour).
+       */
+      state.expressionTokens = [rs];   // seed with result
+      state.currentValue     = rs;
+      state.pendingValue     = null;
+      state.pendingOperator  = null;
+      state.shouldResetNext  = true;
+      state.justEvaluated    = true;
+
+      if (rs === 'Error' || rs === 'Infinity' || rs === '-Infinity') shakeDisplay();
+      updateDisplays();
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       CLEAR
+    ══════════════════════════════════════════════════════════════ */
+    function handleClear() {
+      state.currentValue     = '0';
+      state.pendingValue     = null;
+      state.pendingOperator  = null;
+      state.shouldResetNext  = false;
+      state.justEvaluated    = false;
+      state.expressionTokens = [];
+      state.isPendingPow     = false;
+      state.bracketOpen      = false;
+      updateDisplays();
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       BACKSPACE
+    ══════════════════════════════════════════════════════════════ */
+    function handleBackspace() {
+      if (state.shouldResetNext || state.justEvaluated) {
+        handleClear();
+        return;
+      }
+      if (state.currentValue.length <= 1 ||
+         (state.currentValue.length === 2 && state.currentValue.startsWith('-'))) {
+        state.currentValue = '0';
+      } else {
+        state.currentValue = state.currentValue.slice(0, -1);
+      }
+      // Keep the token in sync
+      const tokens = state.expressionTokens;
+      const isOp   = t => ['+','−','×','÷','^'].includes(t);
+      if (tokens.length > 0 && !isOp(tokens[tokens.length - 1])) {
+        tokens[tokens.length - 1] = state.currentValue;
+      }
+      updateDisplays();
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       PERCENT
+    ══════════════════════════════════════════════════════════════ */
+    function handlePercent() {
+      const val = parseFloat(state.currentValue);
+      if (isNaN(val)) return;
+      let result;
+      if (state.pendingOperator && state.pendingValue !== null) {
+        result = parseFloat(state.pendingValue) * val / 100;
+      } else {
+        result = val / 100;
+      }
+      state.currentValue = fmt(result);
+      // Sync token
+      const tokens = state.expressionTokens;
+      const isOp   = t => ['+','−','×','÷','^'].includes(t);
+      if (tokens.length > 0 && !isOp(tokens[tokens.length - 1])) {
+        tokens[tokens.length - 1] = state.currentValue;
+      }
+      updateDisplays();
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       TOGGLE SIGN
+    ══════════════════════════════════════════════════════════════ */
+    function handleToggleSign() {
+      if (state.currentValue === '0') return;
+      state.currentValue = state.currentValue.startsWith('-')
+        ? state.currentValue.slice(1)
+        : '-' + state.currentValue;
+      const tokens = state.expressionTokens;
+      const isOp   = t => ['+','−','×','÷','^'].includes(t);
+      if (tokens.length > 0 && !isOp(tokens[tokens.length - 1])) {
+        tokens[tokens.length - 1] = state.currentValue;
+      }
+      updateDisplays();
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       BRACKET TOGGLE
+    ══════════════════════════════════════════════════════════════ */
+    function handleBracket() {
+      if (!state.bracketOpen) {
+        state.expressionTokens.push('(');
+        state.bracketOpen = true;
+        showToast('( Bracket opened');
+      } else {
+        state.expressionTokens.push(')');
+        state.bracketOpen = false;
+        showToast(') Bracket closed');
+      }
+      updateDisplays();
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       ANGLE HELPER
+    ══════════════════════════════════════════════════════════════ */
+    const toRad   = v => state.angleMode === 'deg' ? v * Math.PI / 180 : v;
+    const fromRad = v => state.angleMode === 'deg' ? v * 180 / Math.PI : v;
+
+    /* ══════════════════════════════════════════════════════════════
+       SCIENTIFIC FUNCTIONS
+    ══════════════════════════════════════════════════════════════ */
+    function handleScientific(fn) {
+      const val = parseFloat(state.currentValue);
+      let result, label;
+
+      switch (fn) {
+        case 'sin':       result = Math.sin(toRad(val));            label = 'sin('; break;
+        case 'cos':       result = Math.cos(toRad(val));            label = 'cos('; break;
+        case 'tan':       result = Math.tan(toRad(val));            label = 'tan('; break;
+        case 'cot':       result = 1 / Math.tan(toRad(val));        label = 'cot('; break;
+        case 'asin':      result = fromRad(Math.asin(val));         label = 'sin⁻¹('; break;
+        case 'acos':      result = fromRad(Math.acos(val));         label = 'cos⁻¹('; break;
+        case 'atan':      result = fromRad(Math.atan(val));         label = 'tan⁻¹('; break;
+        case 'acot':      result = fromRad(Math.PI/2-Math.atan(val)); label = 'cot⁻¹('; break;
+        case 'sinh':      result = Math.sinh(val);                  label = 'sinh('; break;
+        case 'cosh':      result = Math.cosh(val);                  label = 'cosh('; break;
+        case 'tanh':      result = Math.tanh(val);                  label = 'tanh('; break;
+        case 'asinh':     result = Math.asinh(val);                 label = 'sinh⁻¹('; break;
+        case 'log':       result = Math.log10(val);                 label = 'log('; break;
+        case 'ln':        result = Math.log(val);                   label = 'ln('; break;
+        case 'log2':      result = Math.log2(val);                  label = 'log₂('; break;
+        case 'exp':       result = Math.exp(val);                   label = 'e^('; break;
+        case 'sqrt':      result = Math.sqrt(val);                  label = '√('; break;
+        case 'cbrt':      result = Math.cbrt(val);                  label = '∛('; break;
+        case 'square':    result = val * val;                       label = '('; break;
+        case 'cube':      result = val ** 3;                        label = '('; break;
+        case 'reciprocal':result = 1 / val;                         label = '1/('; break;
+        case 'abs':       result = Math.abs(val);                   label = '|'; break;
+        case 'factorial':
+          result = factorial(Math.round(Math.abs(val)));
+          label  = '';
+          break;
+        case 'pi':
+          state.currentValue    = String(Math.PI);
+          state.expressionTokens = ['π'];
+          state.shouldResetNext  = true;
+          state.justEvaluated    = false;
+          updateDisplays();
+          return;
+        case 'e_const':
+          state.currentValue    = String(Math.E);
+          state.expressionTokens = ['e'];
+          state.shouldResetNext  = true;
+          state.justEvaluated    = false;
+          updateDisplays();
+          return;
+        case 'phi': {
+          const phi = (1 + Math.sqrt(5)) / 2;
+          state.currentValue    = String(phi);
+          state.expressionTokens = ['φ'];
+          state.shouldResetNext  = true;
+          state.justEvaluated    = false;
+          updateDisplays();
+          return;
+        }
+        case 'pow':
+          state.pendingValue    = state.currentValue;
+          state.pendingOperator = '^';
+          state.expressionTokens.push('^');
+          state.shouldResetNext = true;
+          state.justEvaluated   = false;
+          state.isPendingPow    = true;
+          updateDisplays();
+          return;
+        default: return;
+      }
+
+      // Build expression label
+      const suffix = fn === 'abs' ? '|' :
+                     fn === 'square' ? ')²' :
+                     fn === 'cube'   ? ')³' : ')';
+      const exprStr = label
+        ? `${label}${state.currentValue}${suffix}`
+        : `${state.currentValue}!`;
+
+      const rs = fmt(result);
+      addToHistory(exprStr + ' =', rs);
+
+      // Replace expression with the function call
+      state.expressionTokens = [exprStr];
+      state.currentValue     = rs;
+      state.shouldResetNext  = true;
+      state.justEvaluated    = true;
+
+      if (!isFinite(result) || isNaN(result)) shakeDisplay();
+      updateDisplays();
+    }
+
+    function factorial(n) {
+      if (n < 0)   return NaN;
+      if (n > 170) return Infinity;
+      if (n <= 1)  return 1;
+      let r = 1;
+      for (let i = 2; i <= n; i++) r *= i;
+      return r;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       MEMORY
+    ══════════════════════════════════════════════════════════════ */
+    function handleMemory(action) {
+      const val = parseFloat(state.currentValue);
+      switch (action) {
+        case 'mc':     state.memoryValue = 0;        showToast('Memory cleared'); break;
+        case 'mr':
+          if (state.memoryValue !== 0) {
+            state.currentValue    = fmt(state.memoryValue);
+            state.shouldResetNext = false;
+            syncCurrentValueToken();
+          } else { showToast('Memory is empty'); }
+          break;
+        case 'ms':     state.memoryValue = val;      showToast('Saved: ' + fmt(val));  break;
+        case 'mplus':  state.memoryValue += val;     showToast('M+ ' + fmt(val));      break;
+        case 'mminus': state.memoryValue -= val;     showToast('M− ' + fmt(val));      break;
+      }
+      updateDisplays();
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       HISTORY LOG
+    ══════════════════════════════════════════════════════════════ */
+    function addToHistory(expr, result) {
+      state.history.unshift({ expr, result });
+      if (state.history.length > 50) state.history.pop();
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const list = dom.historyList;
+      if (state.history.length === 0) {
+        list.innerHTML = '<div class="history-empty">No history yet</div>';
+        return;
+      }
+      list.innerHTML = state.history.map((item, i) => `
+        <div class="history-item" data-index="${i}" role="button" tabindex="0"
+             aria-label="Recall ${item.result}">
+          <span class="history-expr">${esc(item.expr)}</span>
+          <span class="history-result">${esc(item.result)}</span>
+        </div>
+      `).join('');
+
+      list.querySelectorAll('.history-item').forEach(el => {
+        const recall = () => {
+          const item = state.history[+el.dataset.index];
+          state.currentValue     = item.result;
+          state.expressionTokens = [item.result];
+          state.shouldResetNext  = true;
+          state.justEvaluated    = true;
+          updateDisplays();
+          showToast('Result recalled');
+        };
+        el.addEventListener('click', recall);
+        el.addEventListener('keydown', e => { if (e.key === 'Enter') recall(); });
+      });
+    }
+
+    function clearHistory() {
+      state.history = [];
+      renderHistory();
+      showToast('History cleared');
+    }
+
+    function esc(s) {
+      return String(s)
+        .replace(/&/g,'&')
+        .replace(/</g,'<')
+        .replace(/>/g,'>');
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       UTILITIES
+    ══════════════════════════════════════════════════════════════ */
+    function shakeDisplay() {
+      [dom.mainDisplay, dom.sciMainDisplay].forEach(el => {
+        if (!el) return;
+        el.classList.add('shake');
+        setTimeout(() => el.classList.remove('shake'), 400);
+      });
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      dom.toast.textContent = msg;
+      dom.toast.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => dom.toast.classList.remove('show'), 2200);
+    }
+
+    function toggleTheme() {
+      state.theme = state.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', state.theme);
+      dom.themeToggleBtn.textContent = state.theme === 'dark' ? '🌙' : '☀️';
+      dom.metaThemeColor.content     = state.theme === 'dark' ? '#0a0a0f' : '#f0f2f8';
+      localStorage.setItem('calcpro-theme', state.theme);
+      showToast(state.theme === 'dark' ? 'Dark mode' : 'Light mode');
+    }
+
+    function toggleHistory() {
+      dom.historyPanel.classList.toggle('open');
+      dom.historyToggleBtn.classList.toggle(
+        'active', dom.historyPanel.classList.contains('open')
+      );
+    }
+
+    function switchTab(name) {
+      state.currentTab = name;
+      dom.modeTabs.forEach(t => {
+        const on = t.dataset.tab === name;
+        t.classList.toggle('active', on);
+        t.setAttribute('aria-selected', on);
+      });
+      dom.tabPanels.forEach(p => {
+        p.classList.toggle('active', p.id === 'panel-' + name);
+      });
+      if (name === 'converter' && state.currentConvType === 'currency') {
+        dom.currencyHeader.style.display = 'flex';
+      }
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       SCI GRID DRAG-SCROLL (mouse)
+    ══════════════════════════════════════════════════════════════ */
+    function initSciDragScroll() {
+      const el = dom.sciGridScroll;
+      if (!el) return;
+      let down = false, startY = 0, top = 0;
+      el.addEventListener('mousedown', e => {
+        down = true; startY = e.pageY - el.offsetTop; top = el.scrollTop;
+        el.style.cursor = 'grabbing'; el.style.userSelect = 'none';
+      });
+      ['mouseup','mouseleave'].forEach(ev =>
+        el.addEventListener(ev, () => {
+          down = false; el.style.cursor = ''; el.style.userSelect = '';
+        })
+      );
+      el.addEventListener('mousemove', e => {
+        if (!down) return;
+        e.preventDefault();
+        el.scrollTop = top - (e.pageY - el.offsetTop - startY) * 1.2;
+      });
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       BUTTON EVENT DELEGATION
+    ══════════════════════════════════════════════════════════════ */
+    function handleButtonClick(e) {
+      const btn = e.target.closest('[data-action]');
+      if (!btn) return;
+      const action = btn.dataset.action;
+      const value  = btn.dataset.value;
+
+      switch (action) {
+        case 'digit':       handleDigit(value);      break;
+        case 'decimal':     handleDecimal();          break;
+        case 'operator':    handleOperator(value);    break;
+        case 'equals':      handleEquals();           break;
+        case 'clear':       handleClear();            break;
+        case 'backspace':   handleBackspace();        break;
+        case 'percent':     handlePercent();          break;
+        case 'toggle-sign': handleToggleSign();       break;
+        case 'sci':         handleScientific(value);  break;
+        case 'bracket':     handleBracket();          break;
+        case 'mc': case 'mr': case 'ms':
+        case 'mplus': case 'mminus': handleMemory(action); break;
+      }
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       ANGLE MODE
+    ══════════════════════════════════════════════════════════════ */
+    document.querySelectorAll('[data-angle]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.angleMode = btn.dataset.angle;
+        document.querySelectorAll('[data-angle]').forEach(b =>
+          b.classList.toggle('active', b === btn)
+        );
+        showToast('Angle: ' + state.angleMode.toUpperCase());
+      });
+    });
+
+    /* ══════════════════════════════════════════════════════════════
+       KEYBOARD SUPPORT
+    ══════════════════════════════════════════════════════════════ */
+    document.addEventListener('keydown', e => {
+      if (['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return;
+      const k = e.key;
+      if (!isNaN(k) && k !== ' ') { handleDigit(k); return; }
+      switch (k) {
+        case '+': handleOperator('+'); break;
+        case '-': handleOperator('−'); break;
+        case '*': handleOperator('×'); break;
+        case '/': e.preventDefault(); handleOperator('÷'); break;
+        case 'Enter': case '=': handleEquals();   break;
+        case 'Backspace':       handleBackspace(); break;
+        case 'Escape':          handleClear();     break;
+        case '.': case ',':     handleDecimal();   break;
+        case '%':               handlePercent();   break;
+        case '^':               handleScientific('pow'); break;
+      }
+    });
+
+    /* ══════════════════════════════════════════════════════════════
+       CONVERTER — STATIC DATA
+    ══════════════════════════════════════════════════════════════ */
+    const FALLBACK_RATES = {
+      USD:1, EUR:0.92, GBP:0.79, INR:83.12, JPY:149.50,
+      CAD:1.36, AUD:1.53, CHF:0.90, CNY:7.24, KRW:1325.0,
+      MXN:17.15, BRL:4.97, SGD:1.34, HKD:7.82, NOK:10.55,
+      SEK:10.42, DKK:6.89, NZD:1.63, ZAR:18.63, AED:3.67,
+      THB:35.2, MYR:4.72, IDR:15650, PKR:278.5, EGP:30.9,
+      TRY:32.1, SAR:3.75, QAR:3.64, TWD:31.8, ILS:3.73,
+    };
+
+    const CONV_DATA = {
+      length: {
+        units: { Meter:1, Kilometer:1000, Centimeter:0.01, Millimeter:0.001,
+          Inch:0.0254, Foot:0.3048, Yard:0.9144, Mile:1609.344,
+          'Nautical Mile':1852, Micrometer:1e-6, Nanometer:1e-9 },
+        convert: (v,f,t,u) => (v*u[f])/u[t],
+      },
+      weight: {
+        units: { Kilogram:1, Gram:0.001, Milligram:1e-6, Pound:0.453592,
+          Ounce:0.0283495, Ton:1000, Stone:6.35029, Carat:0.0002 },
+        convert: (v,f,t,u) => (v*u[f])/u[t],
+      },
+      temperature: {
+        units: { Celsius:'C', Fahrenheit:'F', Kelvin:'K', Rankine:'R' },
+        convert: (v,f,t) => {
+          let c = f==='Celsius'?v: f==='Fahrenheit'?(v-32)*5/9: f==='Kelvin'?v-273.15: (v-491.67)*5/9;
+          return t==='Celsius'?c: t==='Fahrenheit'?c*9/5+32: t==='Kelvin'?c+273.15: (c+273.15)*9/5;
+        },
+      },
+      area: {
+        units: { 'Square Meter':1, 'Square Kilometer':1e6, 'Square Centimeter':0.0001,
+          'Square Inch':0.00064516, 'Square Foot':0.092903, 'Square Yard':0.836127,
+          'Square Mile':2589988.11, Acre:4046.856, Hectare:10000 },
+        convert: (v,f,t,u) => (v*u[f])/u[t],
+      },
+      volume: {
+        units: { Liter:1, Milliliter:0.001, 'Cubic Meter':1000, Gallon:3.78541,
+          Quart:0.946353, Pint:0.473176, Cup:0.236588, 'Fluid Ounce':0.0295735 },
+        convert: (v,f,t,u) => (v*u[f])/u[t],
+      },
+      data: {
+        units: { Bit:1, Byte:8, Kilobyte:8e3, Megabyte:8e6, Gigabyte:8e9,
+          Terabyte:8e12, Petabyte:8e15, Kibibyte:8192, Mebibyte:8388608, Gibibyte:8589934592 },
+        convert: (v,f,t,u) => (v*u[f])/u[t],
+      },
+    };
+
+    /* ══════════════════════════════════════════════════════════════
+       LIVE CURRENCY FETCH
+    ══════════════════════════════════════════════════════════════ */
+    async function fetchLiveCurrencyRates(force = false) {
+      const TTL = 30 * 60 * 1000;
+      if (!force && state.currencyRates && state.currencyLastFetch &&
+          Date.now() - state.currencyLastFetch < TTL) return state.currencyRates;
+
+      state.currencyLoading = true;
+      dom.convLoading.classList.add('show');
+      dom.rateBadge.className = 'rate-badge loading';
+      dom.rateStatus.textContent = 'Fetching...';
+
+      const APIS = [
+        'https://open.er-api.com/v6/latest/USD',
+        'https://api.exchangerate-api.com/v4/latest/USD',
+      ];
+
+      for (const url of APIS) {
+        try {
+          const ctrl = new AbortController();
+          const tid  = setTimeout(() => ctrl.abort(), 5000);
+          const res  = await fetch(url, { signal: ctrl.signal });
+          clearTimeout(tid);
+          if (!res.ok) continue;
+          const json  = await res.json();
+          const rates = json.rates || json.conversion_rates;
+          if (!rates) continue;
+
+          const merged = { ...FALLBACK_RATES };
+          for (const [k,v] of Object.entries(rates)) {
+            if (k in FALLBACK_RATES) merged[k] = v;
+          }
+          state.currencyRates    = { rates: merged };
+          state.currencyLastFetch = Date.now();
+          dom.rateBadge.className = 'rate-badge';
+          dom.rateStatus.textContent = 'Live Rates';
+          dom.rateTimestamp.textContent = 'Updated ' +
+            new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+          break;
+        } catch { /* try next */ }
+      }
+
+      if (!state.currencyRates) {
+        state.currencyRates     = { rates: { ...FALLBACK_RATES } };
+        state.currencyLastFetch = Date.now();
+        dom.rateBadge.className = 'rate-badge stale';
+        dom.rateStatus.textContent  = 'Offline Rates';
+        dom.rateTimestamp.textContent = 'Using fallback';
+        showToast('⚠️ Using offline rates');
+      }
+
+      state.currencyLoading = false;
+      dom.convLoading.classList.remove('show');
+      populateConverterUnits(state.currentConvType);
+      runConversion();
+      return state.currencyRates;
+    }
+
+    function populateConverterUnits(type) {
+      let units;
+      if (type === 'currency') {
+        units = Object.keys(state.currencyRates?.rates || FALLBACK_RATES);
+        dom.currencyHeader.style.display = 'flex';
+      } else {
+        units = Object.keys(CONV_DATA[type].units);
+        dom.currencyHeader.style.display = 'none';
+      }
+      dom.convFromUnit.innerHTML = units.map(u => `<option value="${u}">${u}</option>`).join('');
+      dom.convToUnit.innerHTML   = units.map((u,i) => `<option value="${u}"${i===1?' selected':''}>${u}</option>`).join('');
+      if (type === 'currency') {
+        dom.convFromUnit.value = 'USD';
+        dom.convToUnit.value   = 'INR';
+      }
+      dom.convInput.value = '';
+      dom.convResultValue.textContent = '—';
+      dom.convResultUnit.textContent  = '';
+    }
+
+    function runConversion() {
+      const type = state.currentConvType;
+      const from = dom.convFromUnit.value;
+      const to   = dom.convToUnit.value;
+      const val  = parseFloat(dom.convInput.value);
+      if (isNaN(val) || dom.convInput.value.trim() === '') {
+        dom.convResultValue.textContent = '—';
+        dom.convResultUnit.textContent  = '';
+        return;
+      }
+      let result;
+      if (type === 'currency') {
+        const r = state.currencyRates?.rates || FALLBACK_RATES;
+        result  = (val / (r[from] || 1)) * (r[to] || 1);
+      } else if (type === 'temperature') {
+        result = CONV_DATA.temperature.convert(val, from, to);
+      } else {
+        const d = CONV_DATA[type];
+        result  = d.convert(val, from, to, d.units);
+      }
+      if (result === undefined || isNaN(result)) {
+        dom.convResultValue.textContent = 'Error';
+        dom.convResultUnit.textContent  = '';
+        return;
+      }
+      const formatted = (Math.abs(result) >= 1e12 || (Math.abs(result) < 1e-6 && result !== 0))
+        ? result.toExponential(6)
+        : String(parseFloat(result.toPrecision(10)));
+      dom.convResultValue.textContent = formatted;
+      dom.convResultUnit.textContent  = `${val} ${from} = ${formatted} ${to}`;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       PWA INSTALL
+    ══════════════════════════════════════════════════════════════ */
+    let deferredInstall = null;
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      deferredInstall = e;
+      if (!localStorage.getItem('calcpro-install-dismissed')) {
+        dom.installBanner.classList.add('visible');
+      }
+    });
+    window.addEventListener('appinstalled', () => {
+      dom.installBanner.classList.remove('visible');
+      showToast('✅ CalcPro installed!');
+    });
+    dom.installBtn.addEventListener('click', async () => {
+      if (!deferredInstall) { showToast('Use browser menu → Add to Home Screen'); return; }
+      deferredInstall.prompt();
+      await deferredInstall.userChoice;
+      deferredInstall = null;
+      dom.installBanner.classList.remove('visible');
+    });
+    dom.installDismiss.addEventListener('click', () => {
+      dom.installBanner.classList.remove('visible');
+      localStorage.setItem('calcpro-install-dismissed', '1');
+    });
+
+    /* ══════════════════════════════════════════════════════════════
+       WIRE UP ALL OTHER EVENTS
+    ══════════════════════════════════════════════════════════════ */
+    document.addEventListener('click', handleButtonClick);
+
+    dom.modeTabs.forEach(t => t.addEventListener('click', () => switchTab(t.dataset.tab)));
+    dom.historyToggleBtn.addEventListener('click', toggleHistory);
+    dom.clearHistoryBtn.addEventListener('click',  clearHistory);
+    dom.themeToggleBtn.addEventListener('click',   toggleTheme);
+
+    dom.convTypeTabs.addEventListener('click', e => {
+      const btn = e.target.closest('[data-conv]');
+      if (!btn) return;
+      document.querySelectorAll('.conv-type-btn').forEach(b =>
+        b.classList.toggle('active', b === btn)
+      );
+      state.currentConvType = btn.dataset.conv;
+      populateConverterUnits(state.currentConvType);
+      if (state.currentConvType === 'currency') fetchLiveCurrencyRates();
+    });
+
+    dom.convInput.addEventListener('input',   runConversion);
+    dom.convFromUnit.addEventListener('change', runConversion);
+    dom.convToUnit.addEventListener('change',   runConversion);
+    dom.convSwapBtn.addEventListener('click', () => {
+      const f = dom.convFromUnit.value, t = dom.convToUnit.value;
+      dom.convFromUnit.value = t; dom.convToUnit.value = f;
+      runConversion();
+    });
+    dom.refreshRatesBtn.addEventListener('click', async () => {
+      dom.refreshRatesBtn.classList.add('spinning');
+      await fetchLiveCurrencyRates(true);
+      dom.refreshRatesBtn.classList.remove('spinning');
+      runConversion();
+    });
+
+    /* Prevent double-tap zoom */
+    document.querySelectorAll('.btn,.icon-btn,.conv-type-btn,.mode-tab').forEach(b => {
+      b.addEventListener('touchend', e => { e.preventDefault(); b.click(); }, { passive: false });
+    });
+
+    /* ══════════════════════════════════════════════════════════════
+       INIT
+    ══════════════════════════════════════════════════════════════ */
+    function init() {
+      // Restore theme
+      const saved = localStorage.getItem('calcpro-theme') || 'dark';
+      if (saved !== state.theme) {
+        state.theme = saved === 'light' ? 'dark' : 'light'; // toggleTheme flips it
+        toggleTheme();
+      }
+
+      updateDisplays();
+      renderHistory();
+      populateConverterUnits('currency');
+      initSciDragScroll();
+      fetchLiveCurrencyRates();
+
+      setTimeout(() => showToast('Welcome to CalcPro ✨'), 700);
+    }
+
+    init();
+
+  })();
+  </script>
+</body>
+</html>
